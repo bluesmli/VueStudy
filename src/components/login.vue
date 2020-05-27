@@ -1,21 +1,19 @@
 <template>
 	<div class="loginfill">
 		<el-form :model="loginForm" :rules="rules" ref="loginForm">
-			<div class="manage_tip">
-				<p>elm后台管理系统</p>
+			<div class="formcontainer">
+				<p style=""> 接口测试系统</p>
+				<el-form-item prop="username">
+					<el-input  v-model="loginForm.username" placeholder="用户名"></el-input>
+				</el-form-item>
+				<el-form-item prop="password">
+					<el-input  v-model="loginForm.password" placeholder="请输入密码"  show-password></el-input>
+				</el-form-item>
+				<el-form-item>
+					<el-button type="primary" @click="loginsubmit('loginForm')" class="submit_btn">登陆</el-button>
+				</el-form-item>
 			</div>
-			<el-form-item prop="username">
-				<el-input v-model="loginForm.username" placeholder="用户名"></el-input>
-			</el-form-item>
-			<el-form-item prop="password">
-				<el-input v-model="loginForm.password" placeholder="请输入密码"  show-password></el-input>
-			</el-form-item>
-			<el-form-item>
-				<el-button type="primary" @click="loginsubmit('loginForm')" class="submit_btn">登陆</el-button>
-			</el-form-item>
 		</el-form>
-		
-		
 	</div>
 </template>
 
@@ -43,9 +41,9 @@
 		      loginsubmit(formName) {
 		        this.$refs[formName].validate((valid) => {
 		          if (valid) {
-		            alert('submit!');
+		              this.$message.success("校验成功")
 		          } else {
-		            console.log('error submit!!');
+		            this.$message.error("校验失败")
 		            return false;
 		          }
 		        });
@@ -56,6 +54,21 @@
 	}
 </script>
 
+
 <style lang="less" scoped>
-	
+
+.fillcontain{
+
+	text-align: center;
+	margin-top: 100px;
+	margin-left: 800px;
+}
+
+.formcontainer{
+	margin-top: 20%;
+	width: 20%;
+	margin-left: 40%;
+}
+
+
 </style>
