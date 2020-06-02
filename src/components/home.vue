@@ -60,18 +60,14 @@
 		justify-content: space-between;
 		padding-left: 20px;
 		align-items: center;
-
 		div {
 			text-color: "#fff";
 		}
-
 	}
 
 	.el-aside {
 		background-color: #324057;
-
 		.el-menu {
-
 			width: 12.5rem;
 		}
 	}

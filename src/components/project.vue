@@ -34,17 +34,39 @@
 	export default {
 		data() {
 			return {
-				tableData: [{
-						createtime: '2016-05-02 16:09:14',
-						name: 'RCBP-TSM',
-						updatetime: '2016-05-02 16:09:14'
-					},
-					{
-						createtime: '2016-05-02 16:09:14',
-						name: 'RCBP-TSM',
-						updatetime: '2016-05-02 16:09:14'
+				queryinfo: {
+					query: '',
+					pagenum: 1,
+					pagesize: 10,
+				},
+				tableData: []
+			};
+			created:{
+				console.log("start...");
+				this.getprojects()
+			};
+			methods:{
+				//项目分页
+				var instance = axios.create({
+				  baseURL: "https://www.fastmock.site/mock/c3b43a9a02e0a44589c08d2ebdc6f489/api/"
+				});
+				
+				async function getprojects(){
+					const {
+						data: res
+					} = await instance.get('projects')
+					if (res.meta.status != 200) {
+						return this.$message.error("获取项目列表失败")
+						
 					}
-				]
+					console.log("info");
+					this.tableData = res.data.projects;
+
+				}
+				
+				
+
+
 			}
 		}
 	}
