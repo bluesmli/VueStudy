@@ -14,15 +14,15 @@
 								<i class="el-icon-document"></i>
 								<span slot="title">项目管理</span>
 							</el-menu-item>
-							<el-menu-item index="2">
+							<el-menu-item index="apiList">
 								<i class="el-icon-menu"></i>
 								<span slot="title">接口管理</span>
 							</el-menu-item>
-							<el-menu-item index="3" x>
+							<el-menu-item index="testCases" x>
 								<i class="el-icon-document"></i>
 								<span slot="title">测试用例</span>
 							</el-menu-item>
-							<el-menu-item index="4">
+							<el-menu-item index="reportList">
 								<i class="el-icon-setting"></i>
 								<span slot="title">报告统计</span>
 							</el-menu-item>

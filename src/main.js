@@ -10,10 +10,8 @@ import axios from 'axios'
 
 
 Vue.use(ElementUI)
-
-axios.default.baseURL="https://www.fastmock.site/mock/c3b43a9a02e0a44589c08d2ebdc6f489/api/"
-
-
+Vue.config.productionTip = false;
+axios.defaults.baseURL="https://www.fastmock.site/mock/c3b43a9a02e0a44589c08d2ebdc6f489/api/"
 Vue.prototype.$http=axios
 
 new Vue({

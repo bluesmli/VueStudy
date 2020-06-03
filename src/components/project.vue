@@ -16,7 +16,7 @@
 						</el-input>
 					</el-col>
 					<el-col :span="4">
-						<el-button type="primary">添加商品</el-button>
+						<el-button type="primary">添加项目</el-button>
 					</el-col>
 				</el-row>
 				<!-- 表格数据区域 -->
@@ -25,6 +25,13 @@
 					<el-table-column prop="createtime" label="创建时间" width="180"></el-table-column>
 					<el-table-column prop="updatetime" label="更新时间"></el-table-column>
 				</el-table>
+				<!-- 分页区域 -->
+				<div class="block">
+					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="queryinfo.pagenum"
+					 :page-sizes="[20, 40, 60, 80]" :page-size="queryinfo.pagesize" layout="total, sizes, prev, pager, next, jumper"
+					 :total="total">
+					</el-pagination>
+				</div>
 			</el-card>
 		</div>
 	</div>
@@ -37,38 +44,39 @@
 				queryinfo: {
 					query: '',
 					pagenum: 1,
-					pagesize: 10,
+					pagesize: 10
 				},
-				tableData: []
-			};
-			created:{
-				console.log("start...");
-				this.getprojects()
-			};
-			methods:{
-				//项目分页
-				var instance = axios.create({
-				  baseURL: "https://www.fastmock.site/mock/c3b43a9a02e0a44589c08d2ebdc6f489/api/"
-				});
-				
-				async function getprojects(){
-					const {
-						data: res
-					} = await instance.get('projects')
-					if (res.meta.status != 200) {
-						return this.$message.error("获取项目列表失败")
-						
-					}
-					console.log("info");
-					this.tableData = res.data.projects;
-
+				tableData: [],
+				total: 0
+			}
+		},
+		created: function() {
+			this.getprojects()
+		},
+		methods: {
+			async getprojects() {
+				const {
+					data: res
+				} = await this.$http.get('projects', {
+					params: this.queryinfo
+				})
+				if (res.code != 200) {
+					return this.$message.error("获取项目列表失败")
 				}
-				
-				
+				this.tableData = res.data.projects;
+				this.total = res.data.total
+			},
 
-
+			handleSizeChange(newsize) {
+				this.queryinfo.pagesize = newsize
+				this.getprojects()
+			},
+			handleCurrentChange(newsize) {
+				this.queryinfo.pagenum = newsize
+				this.getprojects()
 			}
 		}
+
 	}
 </script>
 
