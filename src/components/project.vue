@@ -16,7 +16,7 @@
 						</el-input>
 					</el-col>
 					<el-col :span="4">
-						<el-button type="primary">添加项目</el-button>
+						<el-button type="primary" @click="projectadd">添加项目</el-button>
 					</el-col>
 				</el-row>
 				<!-- 表格数据区域 -->
@@ -74,6 +74,10 @@
 			handleCurrentChange(newsize) {
 				this.queryinfo.pagenum = newsize
 				this.getprojects()
+			},
+			projectadd(){
+				
+				this.$router.push("/projectadd")
 			}
 		}
 

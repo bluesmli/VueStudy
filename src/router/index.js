@@ -4,6 +4,7 @@ import login from '../components/login.vue'
 import home from "../components/home.vue"
 import explain from "../components/explain.vue"
 import projectList from "../components/project.vue"
+import addproject from "../components/addproject.vue"
 Vue.use(Router)
 
 
@@ -27,6 +28,11 @@ export default new Router({
 				{
 					path: "/projectList",
 					component: projectList,
+					meta: ['项目列表', '项目列表']
+				},
+				{
+					path: "/projectadd",
+					component: addproject,
 					meta: ['项目列表', '项目列表']
 				}
 			]
