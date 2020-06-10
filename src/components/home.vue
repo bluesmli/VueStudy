@@ -2,7 +2,7 @@
 	<el-container>
 		<el-header>
 			<div>接口测试系统</div>
-			<el-button>退出</el-button>
+			<el-button @click="logout">退出</el-button>
 		</el-header>
 		<el-container>
 			<el-aside style="width: 12.5rem;">
@@ -49,6 +49,11 @@
 <script>
 	export default {
 
+		methods: {
+			logout() {
+				this.$router.push("/")
+			}
+		}
 	}
 </script>
 
@@ -60,6 +65,7 @@
 		justify-content: space-between;
 		padding-left: 20px;
 		align-items: center;
+
 		div {
 			text-color: "#fff";
 		}
@@ -67,6 +73,7 @@
 
 	.el-aside {
 		background-color: #324057;
+
 		.el-menu {
 			width: 12.5rem;
 		}
