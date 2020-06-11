@@ -43,14 +43,13 @@
 				</div>
 			</el-card>
 
-
 			<el-dialog title="编辑" :visible.sync="dialogFormVisible">
 				<el-form :model="proeditFrom">
 					<el-form-item label="项目名称" :label-width="formLabelWidth">
 						<el-input v-model="proeditFrom.project_name" autocomplete="off"></el-input>
 					</el-form-item>
 					<el-form-item label="项目描述" :label-width="formLabelWidth">
-						<el-input v-model="proeditFrom.project_desc" autocomplete="off"></el-input>
+						<el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" v-model="proeditFrom.project_desc" autocomplete="off"></el-input>
 					</el-form-item>
 				</el-form>
 				<div slot="footer" class="dialog-footer">

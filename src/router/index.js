@@ -5,6 +5,7 @@ import home from "../components/home.vue"
 import explain from "../components/explain.vue"
 import projectList from "../components/project.vue"
 import addproject from "../components/addproject.vue"
+import apismanage from "../components/apimanage.vue"
 Vue.use(Router)
 
 
@@ -33,7 +34,12 @@ export default new Router({
 				{
 					path: "/projectadd",
 					component: addproject,
-					meta: ['项目列表', '项目列表']
+					meta: ['项目添加', '项目添加']
+				},
+				{
+					path: "/apiList",
+					component: apismanage,
+					meta: ['接口管理', '接口列表']
 				}
 			]
 		}
