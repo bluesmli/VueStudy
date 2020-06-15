@@ -12,43 +12,47 @@
 				<el-row :gutter="20">
 					<el-col :span="6">
 						<el-input placeholder="请输入内容" v-model="queryinfo.query">
-							<el-button slot="append" icon="el-icon-search"></el-button>
+							<el-button slot="append" icon="el-icon-search" @click="getapis()"></el-button>
 						</el-input>
 					</el-col>
 					<el-col :span="4">
-						<el-button type="primary" @click="showEditDialog()">添加接口</el-button>
+						<el-button type="primary" @click="showaddDialog('addapiform')">添加接口</el-button>
 					</el-col>
 				</el-row>
 				<!-- 表格数据区域 -->
-				<el-table stripe style="width: 100%">
+				<el-table :data="tableData" stripe style="width: 100%">
 					<el-table-column prop="id" label="序号 " width="180"></el-table-column>
-					<el-table-column prop="project_name" label="接口名称 " width="180"></el-table-column>
-					<el-table-column prop="project_desc" label="所属项目 " width="180"></el-table-column>
-					<el-table-column prop="create_time" label="请求方式" width="300"></el-table-column>
-					<el-table-column prop="create_time" label="接口地址" width="300"></el-table-column>
-
+					<el-table-column prop="interface_name" label="接口名称 " width="180"></el-table-column>
+					<el-table-column prop="belong_project" label="所属项目 " width="180"></el-table-column>
+					<el-table-column prop="interface_url" label="接口地址" width="180"></el-table-column>
+					<el-table-column prop="method" label="请求方式" width="180">
+						<template slot-scope="scope">
+							<el-tag :type="scope.row.method === 'get' ? 'primary' : 'success'" disable-transitions>{{ scope.row.method }}</el-tag>
+						</template>
+					</el-table-column>
+					<el-table-column prop="create_time" label="创建时间"></el-table-column>
 					<el-table-column prop="update_time" label="更新时间"></el-table-column>
 					<el-table-column label="操作">
 						<template slot-scope="scope">
-							<el-button type="success">编辑</el-button>
+							<el-button type="success" @click="apieditDialog(scope.row.id)">编辑</el-button>
 							<el-button type="danger">删除</el-button>
 						</template>
 
 					</el-table-column>
 				</el-table>
 				<!-- 分页区域 -->
-				<!-- <div class="block">
+				<div class="block">
 					<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="queryinfo.pagenum"
 					 :page-sizes="[20, 40, 60, 80]" :page-size="queryinfo.pagesize" layout="total, sizes, prev, pager, next, jumper"
 					 :total="total">
 					</el-pagination>
-				</div> -->
+				</div>
 			</el-card>
 
 
 			<!-- 添加dialog -->
-			<el-dialog width="60%" title="添加" :visible.sync="dialogFormVisible">
-				<el-form :model="addapiform">
+			<el-dialog width="60%" :title="dialogTitle" :visible.sync="dialogFormVisible">
+				<el-form :model="addapiform" ref="addapiform">
 					<el-form-item label="接口名称" :label-width="formLabelWidth">
 						<el-input v-model="addapiform.apiname" autocomplete="off"></el-input>
 					</el-form-item>
@@ -62,7 +66,7 @@
 
 					<el-form-item label="所属项目" :label-width="formLabelWidth">
 						<el-select v-model="addapiform.belongpro" placeholder="所属项目">
-							<el-option v-for="item in addapiform.options" :key="item.value" :label="item.value" :value="item.value" />
+							<el-option v-for="item in addapiform.options" :key="item.project_name" :label="item.project_name" :value="item.project_name" />
 						</el-select>
 					</el-form-item>
 					<el-form-item label="请求方式" :label-width="formLabelWidth">
@@ -91,6 +95,7 @@
 							</el-tab-pane>
 							<!-- json 请求体 -->
 							<el-tab-pane label="Body">
+								<el-alert type="success" :closable="false"> 说明：JSON格式使用此类纯文本方式</el-alert>
 								<el-form-item>
 									<el-input type="textarea" :autosize="{ minRows:10, maxRows:10}" v-model="addapiform.body" autocomplete="off"></el-input>
 								</el-form-item>
@@ -122,11 +127,16 @@
 
 						</el-tabs>
 					</el-form-item>
-
 				</el-form>
 				<div slot="footer" class="dialog-footer">
-					<el-button @click="dialogFormVisible = false">取 消</el-button>
-					<el-button type="primary">确 定</el-button>
+					<div v-if="dialogTitle === '增加'">
+						<el-button @click="closeForm('addapiform') ">取 消</el-button>
+						<el-button type="primary" @click="addApi('addapiform')">确定</el-button>
+					</div>
+					<div v-else>
+						<el-button @click="dialogFormVisible = false">取 消</el-button>
+						<el-button type="primary">确定</el-button>
+					</div>
 				</div>
 			</el-dialog>
 
@@ -141,7 +151,7 @@
 		data() {
 			return {
 				queryinfo: {
-					query: null,
+					query: "",
 					pagenum: 1,
 					pagesize: 20
 				},
@@ -149,6 +159,7 @@
 				total: 0,
 				dialogFormVisible: false,
 				formLabelWidth: '120px',
+				dialogTitle: null,
 				addapiform: {
 					apiname: '',
 					apidesc: null,
@@ -169,10 +180,62 @@
 
 			}
 		},
+		created: function() {
+			this.getapis()
+		},
 		methods: {
-			showEditDialog() {
-				this.dialogFormVisible = true
+			//获取接口列表信息
+			async getapis() {
+				const {
+					data: res
+				} = await this.$http.get('apis', {
+					params: this.queryinfo
+				})
+				if (res.code != 200) {
+					return this.$message.error("获取接口列表失败")
+				}
+				this.tableData = res.data.apis;
+				this.total = res.data.total
 			},
+			closeForm(formName) {
+				this.$nextTick(() => {
+					this.$refs[formName].resetFields();
+				});
+				this.dialogFormVisible = false;
+
+			},
+			async showaddDialog(formName) {
+				this.dialogFormVisible = true;
+				this.dialogTitle = "增加";
+				// 绑定的数据对象为空
+				this[formName] = {
+					apiname: '',
+					apidesc: null,
+					apiurl: null,
+					belongpro: null,
+					options: [],
+					requestway: null,
+					//请求头信息
+					headerinfo: [],
+					// 请求体信息
+					body: null,
+					// 参数
+					parameters: [],
+					//类型
+					type: ['int', 'string', 'float', 'JSON', 'Boolean', 'list'],
+					actualtype: null
+				};
+				//获取项目数据
+				const {
+					data: res
+				} = await this.$http.get("allprojects");
+				if (res.code != 200) {
+					return this.$message.error("获取项目数据失败")
+				};
+				this.addapiform.options = res.data.projects;
+			},
+
+
 			removeHeader(item) {
 				var index = this.addapiform.headerinfo.indexOf(item)
 				if (index !== -1) {
@@ -181,7 +244,7 @@
 			},
 			addHeader() {
 				this.addapiform.headerinfo.push({
-					value: '',	
+					value: '',
 					key: ''
 				});
 			},
@@ -197,8 +260,52 @@
 					key: '',
 					type: ''
 				});
-				//console.log(this.addapiform)
+			},
+			async addApi(formName) {
+				const {
+					data: res
+				} = await this.$http.post("addapi", this.addapiform)
+				if (res.code != 200) {
+					return this.$message.error("添加失败")
+				};
+			},
+			handleSizeChange(newsize) {
+				this.queryinfo.pagesize = newsize
+				this.getapis()
+			},
+			handleCurrentChange(newsize) {
+				this.queryinfo.pagenum = newsize
+				this.getapis()
+			},
+
+			async apieditDialog(id) {
+				this.dialogTitle = "编辑"
+				this.dialogFormVisible = true
+				const {
+					data: res
+				} = await this.$http.post("getapiByid", {
+					"id": id
+				})
+				if (res.code != 200) {
+					return this.$message.error("查询失败")
+				};
+				this.addapiform.apiname = res.data.apis.interface_name;
+				this.addapiform.apidesc = res.data.apis.interface_desc;
+				this.addapiform.apiurl = res.data.apis.interface_url;
+				this.addapiform.body = res.data.apis.interface_body;
+				this.addapiform.requestway = res.data.apis.method;
+				this.addapiform.headerinfo = res.data.apis.interface_header
+				this.addapiform.parameters = res.data.apis.interface_param
+				//获取项目数据
+				const {
+					data: response
+				} = await this.$http.get("allprojects");
+				if (response.code != 200) {
+					return this.$message.error("获取项目数据失败")
+				};
+				this.addapiform.options = response.data.projects;
 			}
+
 
 		}
 

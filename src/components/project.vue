@@ -33,6 +33,7 @@
 						</template>
 
 					</el-table-column>
+
 				</el-table>
 				<!-- 分页区域 -->
 				<div class="block">
@@ -150,6 +151,7 @@
 				this.dialogFormVisible = true
 			},
 			async editProject() {
+				
 				const {
 					data: res
 				} = await this.$http.post("editProject", {
