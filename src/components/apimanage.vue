@@ -35,7 +35,7 @@
 					<el-table-column label="操作">
 						<template slot-scope="scope">
 							<el-button type="success" @click="apieditDialog(scope.row.id)">编辑</el-button>
-							<el-button type="danger">删除</el-button>
+							<el-button type="danger" @click="delapi(scope.row.id)">删除</el-button>
 						</template>
 
 					</el-table-column>
@@ -135,7 +135,7 @@
 					</div>
 					<div v-else>
 						<el-button @click="dialogFormVisible = false">取 消</el-button>
-						<el-button type="primary">确定</el-button>
+						<el-button type="primary" @click="editapi()">确定</el-button>
 					</div>
 				</div>
 			</el-dialog>
@@ -161,6 +161,7 @@
 				formLabelWidth: '120px',
 				dialogTitle: null,
 				addapiform: {
+					id:null,
 					apiname: '',
 					apidesc: null,
 					apiurl: null,
@@ -233,6 +234,7 @@
 					return this.$message.error("获取项目数据失败")
 				};
 				this.addapiform.options = res.data.projects;
+				
 			},
 
 
@@ -268,6 +270,9 @@
 				if (res.code != 200) {
 					return this.$message.error("添加失败")
 				};
+				this.dialogFormVisible=false
+				this.getapis()
+				
 			},
 			handleSizeChange(newsize) {
 				this.queryinfo.pagesize = newsize
@@ -281,6 +286,7 @@
 			async apieditDialog(id) {
 				this.dialogTitle = "编辑"
 				this.dialogFormVisible = true
+				this.addapiform.id=id
 				const {
 					data: res
 				} = await this.$http.post("getapiByid", {
@@ -304,7 +310,60 @@
 					return this.$message.error("获取项目数据失败")
 				};
 				this.addapiform.options = response.data.projects;
+			},
+			
+			async editapi(){
+				const {
+					data: res
+				} = await this.$http.post("editapi", {
+					"id": this.addapiform.id,
+					"apiname":this.addapiform.apiname,
+					"apidesc": this.addapiform.apidesc,
+					"apiurl": this.addapiform.apiurl,
+					"belongpro": this.addapiform.belongpro,
+					"requestway":  this.addapiform.requestway,
+					//请求头信息
+					"headerinfo":this.addapiform.headerinfo,
+					// 请求体信息
+					"body": this.addapiform.body,
+					// 参数
+					"parameters":this.addapiform.parameters
+				})
+				if (res.code != 200) {
+					return this.$message.error("编辑失败")
+				};
+				this.$message.success("修改成功")
+				this.dialogFormVisible=false
+				this.getapis()
+			},
+			async delapi(id){
+				
+				const confirmResult = await this.$confirm(
+					'此操作将永久删除该接口, 是否继续?',
+					'提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}
+				).catch(err => err)
+				if (confirmResult !== 'confirm') {
+					return this.$message.info('已取消删除！')
+				}
+				
+				const {
+					data: res
+				} = await this.$http.post("delapiByid", {
+				"id":id
+				})
+				
+				if (res.code != 200) {
+					return this.$message.error("删除失败")
+				};
+				this.$message.success("删除成功")
+				this.getapis()
+				
 			}
+			
 
 
 		}
