@@ -10,6 +10,10 @@
 					<el-col :span="24">
 						<el-menu default-active="2" class="el-menu-vertical-demo" background-color="#545c64" text-color="#ffff"
 						 active-text-color="#ffd04b" router>
+							 <el-menu-item index="index">
+								<i class="el-icon-document"></i>
+								<span slot="title">首页</span>
+							 </el-menu-item>
 							<el-menu-item index="projectList">
 								<i class="el-icon-document"></i>
 								<span slot="title">项目管理</span>
@@ -22,17 +26,14 @@
 								<i class="el-icon-document"></i>
 								<span slot="title">测试用例</span>
 							</el-menu-item>
-							<el-menu-item index="reportList">
+					<!-- 		<el-menu-item index="reportList">
 								<i class="el-icon-setting"></i>
 								<span slot="title">报告统计</span>
-							</el-menu-item>
+							</el-menu-item -->
 							<el-submenu index="7">
 								<template slot="title"><i class="el-icon-warning"></i>说明</template>
 								<el-menu-item index="explain">说明</el-menu-item>
 							</el-submenu>
-
-
-
 						</el-menu>
 					</el-col>
 				</el-row>

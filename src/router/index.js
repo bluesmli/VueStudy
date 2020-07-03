@@ -6,6 +6,8 @@ import explain from "../components/explain.vue"
 import projectList from "../components/project.vue"
 import addproject from "../components/addproject.vue"
 import apismanage from "../components/apimanage.vue"
+import cases from "../components/cases.vue"
+import index from "../components/index.vue"
 Vue.use(Router)
 
 
@@ -40,6 +42,16 @@ export default new Router({
 					path: "/apiList",
 					component: apismanage,
 					meta: ['接口管理', '接口列表']
+				},
+				{
+					path: "/testCases",
+					component: cases,
+					meta: ['用例管理', '用例列表']
+				},
+				{
+					path: "/index",
+					component: index,
+					meta: ['首页', '首页']
 				}
 			]
 		}

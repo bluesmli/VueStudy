@@ -28,7 +28,7 @@
 					<el-table-column prop="update_time" label="更新时间"></el-table-column>
 					<el-table-column label="操作">
 						<template slot-scope="scope">
-							<el-button type="success" @click="showEditDialog(scope.row.id)">编辑</el-button>
+							<el-button type="primary" @click="showEditDialog(scope.row.id)">编辑</el-button>
 							<el-button type="danger" @click="delproByid(scope.row.id)">删除</el-button>
 						</template>
 
