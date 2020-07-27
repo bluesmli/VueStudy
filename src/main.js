@@ -6,7 +6,10 @@ import router from './router'
 import "./style/common.css"
 import Router from 'vue-router'
 import axios from 'axios'
+import JsonViewer from 'vue-json-viewer'
 
+Vue.use(JsonViewer)
+Vue.use(Router)
 
 
 Vue.use(ElementUI)

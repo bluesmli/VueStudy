@@ -30,7 +30,6 @@
 						<template slot-scope="scope">
 							<el-button type="primary" @click="editShowDialog(scope.row.id)">编辑</el-button>
 							<el-button type="primary" @click="stepShowDialog(scope.row.id)">步骤</el-button>
-							<el-button type="success">运行</el-button>
 							<el-button type="danger" @click="delcaseByid(scope.row.id)">删除</el-button>
 						</template>
 					</el-table-column>
@@ -128,7 +127,7 @@
 				<div slot="footer" class="dialog-footer">
 					<div>
 						<el-button @click="quit()">取 消</el-button>
-						<el-button type="success" @click="debugCase(stepform.caseid)">调试</el-button>
+						<el-button type="success" @click="debugCase(stepform.caseid)">运行</el-button>
 						<el-button type="primary" @click="saveSteps()">保存</el-button>
 					</div>
 				</div>
@@ -176,7 +175,7 @@
 					apis: [],
 					apicollections: [],
 					debugresult: null
-				}
+				},
 			}
 		},
 		created: function() {
@@ -286,7 +285,7 @@
 				if (res.code != 200) {
 					return this.$message.error("运行数据失败")
 				};
-				this.stepform.debugresult = res.data.join(",")
+				this.stepform.debugresult = res.data.toString()
 			},
 			quit() {
 				this.stepform.debugresult = null,

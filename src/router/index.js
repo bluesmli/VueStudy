@@ -4,11 +4,10 @@ import login from '../components/login.vue'
 import home from "../components/home.vue"
 import explain from "../components/explain.vue"
 import projectList from "../components/project.vue"
-import addproject from "../components/addproject.vue"
-import apismanage from "../components/apimanage.vue"
+import addproject from "../components/addpro.vue"
+import apismanage from "../components/apis.vue"
 import cases from "../components/cases.vue"
 import index from "../components/index.vue"
-Vue.use(Router)
 
 
 export default new Router({
